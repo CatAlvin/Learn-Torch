@@ -79,3 +79,57 @@ Before training any neural network, always check:
 - shape
 - dtype
 - device
+
+## Shape, dtype, and device
+
+When debugging PyTorch code, always check three things:
+
+- `shape`
+- `dtype`
+- `device`
+
+### Shape
+
+Shape tells us the structure of the data.
+
+```python
+x = torch.rand(32, 3, 224, 224)
+print(x.shape)
+```
+
+This usually means:
+
+```text
+32 images
+3 color channels
+224 height
+224 width
+```
+
+### Dtype
+
+Dtype tells us the data type.
+
+Common rules:
+
+```text
+features: torch.float32
+classification labels: torch.long / torch.int64
+```
+
+### Device
+
+Device tells us where the Tensor is stored.
+
+```python
+device = "cuda" if torch.cuda.is_available() else "cpu"
+x = x.to(device)
+```
+
+Important rule:
+
+```text
+The model and data must be on the same device.
+```
+
+Otherwise, PyTorch will raise a device mismatch error.
