@@ -133,3 +133,119 @@ The model and data must be on the same device.
 ```
 
 Otherwise, PyTorch will raise a device mismatch error.
+
+## Indexing, slicing, reshape, unsqueeze, and squeeze
+
+### Indexing
+
+Tensor indexing is similar to NumPy indexing.
+
+```python
+score_table = torch.tensor([
+    [80, 85, 90],
+    [70, 88, 95],
+    [92, 76, 89],
+    [60, 72, 68],
+])
+```
+
+Get one row:
+
+```python
+score_table[0]
+```
+
+Get one column:
+
+```python
+score_table[:, 0]
+```
+
+Get part of columns:
+
+```python
+score_table[:, 1:]
+```
+
+### Boolean indexing
+
+Boolean indexing can filter rows.
+
+```python
+student_average = score_table.float().mean(dim=1)
+mask = student_average >= 85
+high_score_students = score_table[mask]
+```
+
+### Reshape
+
+`reshape` changes the shape of a Tensor.
+
+Important rule:
+
+```text
+The number of elements before and after reshape must be the same.
+```
+
+Example:
+
+```python
+x = torch.arange(12)
+x.reshape(3, 4)
+```
+
+### Using -1 in reshape
+
+`-1` lets PyTorch infer that dimension automatically.
+
+```python
+x = torch.arange(24)
+x.reshape(4, -1)
+x.reshape(-1, 3)
+```
+
+### unsqueeze
+
+`unsqueeze` adds one dimension.
+
+```python
+one_student = torch.tensor([5.0, 0.90, 88.0, 84.0])
+model_input = one_student.unsqueeze(dim=0)
+```
+
+Shape change:
+
+```text
+[4] -> [1, 4]
+```
+
+This is useful when a model expects batch input.
+
+### squeeze
+
+`squeeze` removes dimensions whose size is 1.
+
+Safer style:
+
+```python
+x.squeeze(dim=1)
+```
+
+Instead of:
+
+```python
+x.squeeze()
+```
+
+### Flatten image batch
+
+```python
+images = torch.rand(8, 1, 28, 28)
+flattened_images = images.reshape(8, -1)
+```
+
+Shape change:
+
+```text
+[8, 1, 28, 28] -> [8, 784]
+```
