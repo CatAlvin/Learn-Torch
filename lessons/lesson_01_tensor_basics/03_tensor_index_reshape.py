@@ -173,7 +173,6 @@ def main():
     print("Before flattening: [8, 1, 28, 28]")
     print("After flattening : [8, 784]")
     print("Each image becomes a vector with 1 * 28 * 28 = 784 features.")
-
-
+    
 if __name__ == "__main__":
     main()
