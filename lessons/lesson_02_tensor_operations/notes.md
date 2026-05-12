@@ -143,3 +143,106 @@ w      : [4, 1]
 b      : [1]
 output : [5, 1]
 ```
+
+## Matrix multiplication and linear layer
+
+### Matrix multiplication shape rule
+
+The most important shape rule:
+
+```text
+[A, B] @ [B, C] = [A, C]
+```
+
+Example:
+
+```text
+[5, 4] @ [4, 1] = [5, 1]
+```
+
+Meaning:
+
+```text
+5 samples
+4 features per sample
+1 output per sample
+```
+
+### Linear calculation
+
+A basic linear calculation is:
+
+```python
+output = x @ w + b
+```
+
+Shape example:
+
+```text
+x      : [5, 4]
+w      : [4, 1]
+b      : [1]
+output : [5, 1]
+```
+
+### What does weight mean?
+
+Each weight controls how much one input feature affects the output.
+
+Example:
+
+```text
+study_hours has one weight
+attendance_rate has one weight
+homework_score has one weight
+quiz_score has one weight
+```
+
+### Multiple outputs
+
+If we want 2 outputs:
+
+```text
+x shape: [5, 4]
+w shape: [4, 2]
+b shape: [2]
+output shape: [5, 2]
+```
+
+This means:
+
+```text
+5 samples
+2 output scores per sample
+```
+
+### nn.Linear
+
+PyTorch provides:
+
+```python
+linear = torch.nn.Linear(in_features=4, out_features=2)
+output = linear(x)
+```
+
+Important detail:
+
+```text
+linear.weight shape is [out_features, in_features].
+```
+
+Manual equivalent:
+
+```python
+manual_output = x @ linear.weight.T + linear.bias
+```
+
+### Key takeaway
+
+`nn.Linear` is not magic.
+
+It is basically:
+
+```python
+output = x @ w + b
+```
