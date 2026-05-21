@@ -173,3 +173,136 @@ A simple CNN often follows this pattern:
 ```text
 Conv2d -> ReLU -> Pool -> Conv2d -> ReLU -> Pool -> Flatten -> Linear
 ```
+
+## FashionMNIST CNN training
+
+### Dataset
+
+FashionMNIST is an image classification dataset.
+
+It has 10 classes:
+
+```text
+T-shirt/top
+Trouser
+Pullover
+Dress
+Coat
+Sandal
+Shirt
+Sneaker
+Bag
+Ankle boot
+```
+
+Each image is grayscale:
+
+```text
+[1, 28, 28]
+```
+
+A batch of images has shape:
+
+```text
+[batch_size, 1, 28, 28]
+```
+
+### ToTensor
+
+`transforms.ToTensor()` converts images into PyTorch Tensors.
+
+```python
+transform = transforms.ToTensor()
+```
+
+### DataLoader
+
+Example:
+
+```python
+train_loader = DataLoader(
+    dataset=train_dataset,
+    batch_size=64,
+    shuffle=True,
+    num_workers=0,
+)
+```
+
+For Windows learning environment, `num_workers=0` is the safest option.
+
+### CNN model
+
+The model structure:
+
+```text
+Conv2d -> ReLU -> MaxPool2d
+Conv2d -> ReLU -> MaxPool2d
+Flatten
+Linear -> ReLU -> Linear
+```
+
+Shape flow:
+
+```text
+[N, 1, 28, 28]
+-> [N, 8, 28, 28]
+-> [N, 8, 14, 14]
+-> [N, 16, 14, 14]
+-> [N, 16, 7, 7]
+-> [N, 784]
+-> [N, 64]
+-> [N, 10]
+```
+
+### Output
+
+FashionMNIST has 10 classes, so the final output shape is:
+
+```text
+[batch_size, 10]
+```
+
+Each row contains 10 logits.
+
+### Loss
+
+For this multi-class classification task:
+
+```python
+loss_fn = torch.nn.CrossEntropyLoss()
+loss = loss_fn(logits, labels)
+```
+
+Important:
+
+```text
+Use raw logits for CrossEntropyLoss.
+Do not apply softmax before the loss function.
+```
+
+### Accuracy
+
+Prediction:
+
+```python
+predicted_classes = torch.argmax(logits, dim=1)
+```
+
+Accuracy:
+
+```python
+correct = (predicted_classes == labels).sum().item()
+accuracy = correct / labels.size(0)
+```
+
+### Key takeaway
+
+CNN training still follows the same PyTorch training loop:
+
+```text
+model(images)
+loss_fn(logits, labels)
+optimizer.zero_grad()
+loss.backward()
+optimizer.step()
+```
