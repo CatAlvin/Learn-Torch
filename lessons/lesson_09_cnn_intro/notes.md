@@ -306,3 +306,119 @@ optimizer.zero_grad()
 loss.backward()
 optimizer.step()
 ```
+
+## Saving and loading models
+
+### Why save models?
+
+After training, the learned parameters are stored in memory.
+
+If we close the program without saving, the trained model is lost.
+
+So we save model weights to a file.
+
+### state_dict
+
+A model's `state_dict` stores its learned parameters.
+
+Example:
+
+```python
+torch.save(model.state_dict(), "model.pth")
+```
+
+It usually contains:
+
+```text
+layer weights
+layer biases
+```
+
+### Recommended save style
+
+Recommended:
+
+```python
+torch.save(model.state_dict(), model_path)
+```
+
+Less recommended for long-term projects:
+
+```python
+torch.save(model, model_path)
+```
+
+Reason:
+
+```text
+Saving state_dict is lighter and easier to maintain.
+```
+
+### Loading a model
+
+To load a model, first create the same model structure.
+
+```python
+loaded_model = FashionMNISTCNN().to(device)
+```
+
+Then load the saved weights:
+
+```python
+state_dict = torch.load(model_path, map_location=device)
+loaded_model.load_state_dict(state_dict)
+```
+
+### Inference mode
+
+Before prediction, use:
+
+```python
+loaded_model.eval()
+```
+
+During prediction, use:
+
+```python
+with torch.no_grad():
+    logits = loaded_model(x)
+```
+
+### Single image prediction
+
+A single FashionMNIST image has shape:
+
+```text
+[1, 28, 28]
+```
+
+But CNN expects:
+
+```text
+[N, C, H, W]
+```
+
+So we add a batch dimension:
+
+```python
+image_batch = image.unsqueeze(dim=0)
+```
+
+Shape change:
+
+```text
+[1, 28, 28] -> [1, 1, 28, 28]
+```
+
+### Key takeaway
+
+The real project workflow is:
+
+```text
+train model
+save state_dict
+create same model structure
+load state_dict
+use model.eval()
+predict with torch.no_grad()
+```
