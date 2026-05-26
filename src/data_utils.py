@@ -16,12 +16,31 @@ CLASS_NAMES = [
 ]
 
 
+def build_fashion_mnist_transform(use_normalization=False):
+    transform_list = [
+        transforms.ToTensor(),
+    ]
+
+    if use_normalization:
+        transform_list.append(
+            transforms.Normalize(
+                mean=(0.2860,),
+                std=(0.3530,),
+            )
+        )
+
+    return transforms.Compose(transform_list)
+
+
 def get_fashion_mnist_datasets(
     root="data/raw",
     train_subset_size=5000,
     test_subset_size=1000,
+    use_normalization=False,
 ):
-    transform = transforms.ToTensor()
+    transform = build_fashion_mnist_transform(
+        use_normalization=use_normalization,
+    )
 
     train_dataset_full = datasets.FashionMNIST(
         root=root,
@@ -61,11 +80,13 @@ def get_fashion_mnist_loaders(
     train_subset_size=5000,
     test_subset_size=1000,
     num_workers=0,
+    use_normalization=False,
 ):
     train_dataset, test_dataset, train_dataset_full, test_dataset_full = (
         get_fashion_mnist_datasets(
             train_subset_size=train_subset_size,
             test_subset_size=test_subset_size,
+            use_normalization=use_normalization,
         )
     )
 
