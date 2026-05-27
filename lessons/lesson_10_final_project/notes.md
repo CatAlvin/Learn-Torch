@@ -621,3 +621,73 @@ Bad augmentation can create images outside the real data distribution.
 Never blindly trust augmentation.
 
 Always visualize augmented samples.
+
+## Part 7 - Experiment tracking
+
+### Goal
+
+In this part, we save training metrics and compare experiments.
+
+We compare:
+
+```text
+improved CNN without augmentation
+improved CNN with augmentation
+```
+
+### Why save training logs?
+
+Terminal output disappears after training.
+
+CSV logs allow us to:
+
+```text
+compare experiments
+plot curves later
+analyze results with pandas
+summarize results in README
+```
+
+### Metrics to save
+
+Common metrics:
+
+```text
+epoch
+train_loss
+test_loss
+train_acc
+test_acc
+learning_rate
+```
+
+### Best vs final
+
+`best_test_acc` means the best test accuracy during training.
+
+`final_test_acc` means test accuracy at the final epoch.
+
+They may be different.
+
+Important idea:
+
+```text
+The last epoch is not always the best epoch.
+```
+
+### Experiment summary
+
+A useful summary includes:
+
+```text
+experiment_name
+best_test_acc
+final_test_acc
+final_test_loss
+```
+
+### Key takeaway
+
+A real training project should keep experiment records.
+
+Without logs, it is hard to know which change actually improved the model.
