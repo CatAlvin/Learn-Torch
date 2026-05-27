@@ -264,3 +264,100 @@ regularization
 best checkpoint saving
 separate train and predict scripts
 ```
+
+## Part 3 - Model evaluation
+
+### Goal
+
+In this part, we evaluate the improved CNN more carefully.
+
+We check:
+
+```text
+overall accuracy
+per-class accuracy
+confusion matrix
+classification report
+misclassified examples
+```
+
+### Overall accuracy
+
+Overall accuracy measures total correct predictions.
+
+```python
+accuracy = correct_predictions / total_samples
+```
+
+### Per-class accuracy
+
+Per-class accuracy checks each class separately.
+
+Example:
+
+```text
+T-shirt/top accuracy
+Trouser accuracy
+Shirt accuracy
+Sneaker accuracy
+```
+
+This helps us find weak classes.
+
+### Confusion matrix
+
+A confusion matrix shows how classes are confused.
+
+```text
+Rows    = true labels
+Columns = predicted labels
+```
+
+Diagonal values mean correct predictions.
+
+Off-diagonal values mean wrong predictions.
+
+### Classification report
+
+A classification report includes:
+
+```text
+precision
+recall
+f1-score
+support
+```
+
+Basic meaning:
+
+```text
+precision: how reliable predictions of this class are
+recall: how many real samples of this class were found
+f1-score: balance between precision and recall
+support: number of samples in this class
+```
+
+### Misclassified examples
+
+Saving wrong predictions helps us inspect model errors visually.
+
+Example:
+
+```text
+True: Shirt
+Pred: T-shirt/top
+Confidence: 0.71
+```
+
+### Key takeaway
+
+A good evaluation does not only report one accuracy number.
+
+It should also answer:
+
+```text
+Which classes are weak?
+Which classes are confused?
+What do wrong examples look like?
+Is the model confidently wrong?
+```
