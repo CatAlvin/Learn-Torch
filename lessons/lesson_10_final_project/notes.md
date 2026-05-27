@@ -552,3 +552,72 @@ large crop
 Data augmentation should create realistic variations.
 
 It should not change the meaning of the image.
+
+## Part 6 - Visualizing data augmentation
+
+### Goal
+
+Before trusting data augmentation, we should visualize augmented samples.
+
+### Why visualize augmentation?
+
+Data augmentation can help generalization, but bad augmentation can hurt the model.
+
+Important question:
+
+```text
+Does the augmented image still keep the correct label?
+```
+
+### Original transform
+
+```python
+original_transform = build_fashion_mnist_transform(
+    use_normalization=False,
+    use_augmentation=False,
+)
+```
+
+### Augmented transform
+
+```python
+augmented_transform = build_fashion_mnist_transform(
+    use_normalization=True,
+    use_augmentation=True,
+)
+```
+
+### Why unnormalize before visualization?
+
+Normalized images are not in the original pixel range.
+
+To display them properly:
+
+```python
+image = image * std + mean
+image = image.clamp(0, 1)
+```
+
+### What to check
+
+When viewing augmented samples, check:
+
+```text
+Are images still recognizable?
+Are labels still correct?
+Are rotations too strong?
+Are translations too large?
+Does horizontal flip make sense for this task?
+```
+
+### Important rule
+
+Good augmentation should create realistic variations.
+
+Bad augmentation can create images outside the real data distribution.
+
+### Key takeaway
+
+Never blindly trust augmentation.
+
+Always visualize augmented samples.
