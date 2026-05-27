@@ -459,3 +459,96 @@ best checkpoint
 training curves
 learning rate curve
 ```
+
+## Part 5 - Data Augmentation
+
+### Goal
+
+In this part, we add train-time data augmentation.
+
+Data augmentation helps improve generalization.
+
+### What is data augmentation?
+
+Data augmentation randomly changes training images.
+
+Examples:
+
+```text
+random horizontal flip
+small rotation
+small translation
+```
+
+The goal is to help the model learn more robust features.
+
+### Train transform vs test transform
+
+Important rule:
+
+```text
+Use augmentation for training data.
+Do not use random augmentation for test data.
+```
+
+Reason:
+
+```text
+Training augmentation improves robustness.
+Test data should remain stable and fair for evaluation.
+```
+
+### Transform pipeline
+
+Training transform:
+
+```python
+transforms.RandomHorizontalFlip(p=0.5)
+transforms.RandomRotation(degrees=10)
+transforms.RandomAffine(
+    degrees=0,
+    translate=(0.08, 0.08),
+)
+transforms.ToTensor()
+transforms.Normalize(mean=(0.2860,), std=(0.3530,))
+```
+
+Test transform:
+
+```python
+transforms.ToTensor()
+transforms.Normalize(mean=(0.2860,), std=(0.3530,))
+```
+
+### Why train accuracy may decrease
+
+With augmentation, training images become harder.
+
+So train accuracy may decrease.
+
+But if test accuracy improves, augmentation is useful.
+
+### Reasonable augmentation
+
+For FashionMNIST, reasonable augmentation includes:
+
+```text
+small rotation
+small translation
+horizontal flip
+```
+
+Unreasonable augmentation may include:
+
+```text
+vertical flip
+90-degree rotation
+strong distortion
+large crop
+```
+
+### Key takeaway
+
+Data augmentation should create realistic variations.
+
+It should not change the meaning of the image.
