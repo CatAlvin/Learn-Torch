@@ -361,3 +361,101 @@ Which classes are confused?
 What do wrong examples look like?
 Is the model confidently wrong?
 ```
+
+## Part 4 - Scheduler and Early Stopping
+
+### Goal
+
+In this part, we improve the training process.
+
+We add:
+
+```text
+Learning rate scheduler
+Early stopping
+Best checkpoint based on test accuracy
+Learning rate curve
+```
+
+### Why scheduler?
+
+A fixed learning rate may not be ideal for the whole training process.
+
+Common idea:
+
+```text
+Early training: larger learning rate for faster learning
+Later training: smaller learning rate for fine adjustment
+```
+
+### ReduceLROnPlateau
+
+We use:
+
+```python
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer=optimizer,
+    mode="min",
+    factor=0.5,
+    patience=2,
+)
+```
+
+Meaning:
+
+```text
+mode="min": monitored value should decrease
+factor=0.5: reduce learning rate by half
+patience=2: wait 2 epochs before reducing learning rate
+```
+
+After each epoch:
+
+```python
+scheduler.step(test_loss)
+```
+
+### Early stopping
+
+Early stopping stops training when performance does not improve for several epochs.
+
+Example:
+
+```text
+If test accuracy does not improve for 6 epochs, stop training.
+```
+
+Basic logic:
+
+```python
+if test_acc > best_test_acc:
+    best_test_acc = test_acc
+    epochs_without_improvement = 0
+    save_checkpoint()
+else:
+    epochs_without_improvement += 1
+
+if epochs_without_improvement >= patience:
+    stop_training()
+```
+
+### Why save best checkpoint?
+
+The last epoch is not always the best epoch.
+
+A model may overfit after reaching its best validation or test performance.
+
+So we save the model whenever the monitored metric improves.
+
+### Key takeaway
+
+A stronger training workflow should include:
+
+```text
+optimizer
+scheduler
+early stopping
+best checkpoint
+training curves
+learning rate curve
+```
